@@ -109,7 +109,8 @@
         //var hlbka = info.match(/Hlbka = ([0-9]*.[0-9]*)/g);
         //var h = (/Hlbka = ([0-9]*.[0-9]*)/g).exec(info);
         
-        var regexH = /hlbka = (\d*.\d*)/i;
+        //var regexH = /hlbka = (\d*.\d*)/i;
+        var regexH = /GRAY_INDEX = (\d*.\d*)/i;
         var match = regexH.exec(info);
         
         //this._map.openPopup(hlbka, latlng);
@@ -128,9 +129,9 @@
 
     //wms
     //var wmsSrc = L.WMS.source('http://webmap.sk:8080/geoserver2112/nitra_students/wms?', {
-      // var url = '/svc/ba-simple-proxy.php?url=' + encodeURIComponent('http://webmap.sk:8080/geoserver2112/nitra_students/wms?');
+      var url = '/svc/wms-proxy.php?url=' + encodeURIComponent('http://webmap.sk:8080/geoserver2112/nitra_students/wms?');
       // console.log(encodeURIComponent('http://webmap.sk:8080/geoserver2112/nitra_students/wms?'));
-      var url = 'http://webmap.sk:8080/geoserver2112/nitra_students/wms?';
+      // var url = 'http://webmap.sk:8080/geoserver2112/nitra_students/wms?';
     var wmsSrc = new rickoInfoSource(url, {
       'transparent': true,
       tiled: true,
