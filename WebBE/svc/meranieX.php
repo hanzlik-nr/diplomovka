@@ -19,39 +19,36 @@
 
             
             //nadmorska vyska arduina
-            $ard_nmv = 30000;
+            $ard_nmv = '0';
 
             //zistenie aktualnej nadmorskej vysky arduina (ulozena v tabulke nastavenia)
             $sql = "SELECT hodnota FROM nastavenie WHERE nazov = 'arduino_nmv'";
 
             $result = $conn->query($sql);
 
-            // if ($result->num_rows > 0) {
-            //     // output data of each row
-            //     while($row = $result->fetch_assoc()) {
-            //         $ard_nmv = $row["hodnota"];
-            //     }
-            // } else {
-            //     //zatial nic
-            //     //echo "N/A";
-            // }        
-
-            echo 4
-            
+            if ($result->num_rows > 0) {
+                // output data of each row
+                $row = $result->fetch_assoc();
+                $ard_nmv = $row["hodnota"];
+                //echo $ard_nmv;
+            } else {
+                //zatial nic
+                //echo "N/A";
+            }        
 
             //hodnota z arduina = vzdialenost od hladiny
             $vzdialenost = $_GET['h'];
 
-            //$hlad_nmv = $ard_nmv - $vzdialenost
+            $hlad_nmv = $ard_nmv - $vzdialenost;
 
-            //$sql = "INSERT INTO meranie (hodnota) VALUES ({$hlad_nmv})";
-            // $sql = "INSERT INTO meranie (hodnota) VALUES ({$vzdialenost})";
+            $sql = "INSERT INTO meranie (hodnota) VALUES ({$hlad_nmv})";
+            //$sql = "INSERT INTO meranie (hodnota) VALUES ({$vzdialenost})";
 
-            // if ($conn->query($sql) === TRUE) {
-            //     echo "OK";
-            // } else {
-            //     echo "Error: " . $sql . "<br>" . $conn->error;
-            // }
+            if ($conn->query($sql) === TRUE) {
+                echo "OK ".$hlad_nmv;
+            } else {
+                echo "Error: " . $sql . "<br>" . $conn->error;
+            }
 
             $conn->close();
 
@@ -61,31 +58,8 @@
         }
     }
     //catch exception
-    catch(Exception $e) {
+    catch(\Exception $e) {
         echo 'Message: ' .$e->getMessage();
     }
 
-/*
-$servername = "localhost";
-$username = "username";
-$password = "password";
-$dbname = "myDB";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-} 
-
-$sql = "INSERT INTO MyGuests (firstname, lastname, email)
-VALUES ('John', 'Doe', 'john@example.com')";
-
-if ($conn->query($sql) === TRUE) {
-    echo "New record created successfully";
-} else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
-}
-
-$conn->close();
-*/
+?>
