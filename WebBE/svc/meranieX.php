@@ -20,17 +20,22 @@
             
             //nadmorska vyska arduina
             $ard_nmv = '0';
+            //a dna vodnej nadrze
+            $dno_nmv = 0;
 
             //zistenie aktualnej nadmorskej vysky arduina (ulozena v tabulke nastavenia)
-            $sql = "SELECT hodnota FROM nastavenie WHERE nazov = 'arduino_nmv'";
+            //aktualne query s radenim hodnot zalozena na nazve nastaveni, trosku naivne a nebezpecne, takze ak, tak
+            //v buducnosti upravit
+            $sql = "SELECT nmv FROM nastavenie WHERE nazov = 'arduino_nmv' OR nazov = 'dno_nmv' ORDER BY nazov ASC";
 
             $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
-                // output data of each row
+                //vysledok by mal mat vzdy 2 riadky, takze nejdeme riesit, co ak nema :)
                 $row = $result->fetch_assoc();
-                $ard_nmv = $row["hodnota"];
-                //echo $ard_nmv;
+                $ard_nmv = $row["nmv"];
+                $row = $result->fetch_assoc();
+                $ard_nmv = $row["nmv"];
             } else {
                 //zatial nic
                 //echo "N/A";
@@ -39,13 +44,15 @@
             //hodnota z arduina = vzdialenost od hladiny
             $vzdialenost = $_GET['h'];
 
-            $hlad_nmv = $ard_nmv - $vzdialenost;
+            //do databazy ukladame "vysku vody v nadrzi", t.j.
+            //nadmorska vyska hladiny (nadmorska vyska arduina - vzdialenost k hladine) - nadmorska vyska dna (najnizsi bod)
+            $hlad_nmv = $ard_nmv - ($vzdialenost / 100) - $dno_nmv;
 
             $sql = "INSERT INTO meranie (hodnota) VALUES ({$hlad_nmv})";
             //$sql = "INSERT INTO meranie (hodnota) VALUES ({$vzdialenost})";
 
             if ($conn->query($sql) === TRUE) {
-                echo "OK ".$hlad_nmv;
+                echo "OK (vv=$hlad_nmv)";
             } else {
                 echo "Error: " . $sql . "<br>" . $conn->error;
             }

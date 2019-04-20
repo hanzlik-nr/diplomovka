@@ -12,21 +12,26 @@
             die("Connection failed: " . $conn->connect_error);
         } 
 
-        $hodnota = $_GET['h'];
+        //$hodnota = $_GET['h'];
 
         //$sql = "INSERT INTO meranie (hodnota) VALUES ({$hodnota})";
-        $sql = "SELECT map.vrstva vrstva FROM meranie mer JOIN mapovanie map ON map.hodnotaOd <= (21800 - mer.hodnota) AND (21800 - mer.hodnota) <= map.hodnotaDo ORDER BY mer.id DESC LIMIT 1";
+        $sql = "SELECT map.vrstva vrstva, mer.cas_merania cas FROM meranie mer JOIN mapovanie map ON map.hodnotaOd <= (mer.hodnota) AND (mer.hodnota) <= map.hodnotaDo ORDER BY mer.id DESC LIMIT 1";
 
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
             // output data of each row
             while($row = $result->fetch_assoc()) {
-                echo $row["vrstva"];
+                $cas = $row['cas'];
+                $vrstva = $row['vrstva'];
                 //echo join(', ', $row);
             }
         } else {
             echo "N/A";
         }
 
+        $date=date_create($cas);
+        echo date_format($date,"d.m.Y").";".date_format($date,"H:i:s").";".$vrstva;
+
         $conn->close();
+?>
