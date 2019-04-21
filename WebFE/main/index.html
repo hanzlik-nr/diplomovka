@@ -28,6 +28,8 @@
     integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
     crossorigin="" />
   <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+  <!-- jQuery - kvoli volaniu svc (sluzieb) -->
+  <script src="https://unpkg.com/jquery@3.4.0/dist/jquery.js"></script>
 </head>
 
 <body id="page-top">
@@ -62,9 +64,11 @@
   <header class="masthead">
     <div class="container d-flex h-100 align-items-center">
       <div class="mx-auto text-center">
-        <h1 class="mx-auto my-0 text-uppercase">Využitie nástrojov WEB GIS</h1>
-        <h2 class="text-white-50 mx-auto mt-2 mb-5">pre publikovanie údajov o vodných nádržiach</h2>
-        <a href="#about" class="btn btn-primary js-scroll-trigger">Zistiť viac</a>
+        <h1 class="mx-auto my-0 text-uppercase">Využitie nástrojov WEB&nbsp;GIS</h1>
+        <h3 class="text-white-50 mx-auto mt-2 mb-5">pre publikovanie údajov o vodných nádržiach</h3>
+        <a href="#about" class="btn btn-primary js-scroll-trigger">Viac info</i></a>
+        &nbsp;
+        <a href="/lite" class="btn btn-primary js-scroll-trigger" target="_blank">Viac mapy</a>
       </div>
     </div>
   </header>
@@ -75,7 +79,7 @@
       <div class="row">
         <div class="col-lg-8 mx-auto">
           <h2 class="text-white mb-4">O stránke</h2>
-          <p class="text-white-50">
+          <p class="text-white-50" style="text-align: justify;text-justify: newspaper">
             Toto je prezentačná stránka k mojej diplomovej práci "VYUŽITIE NÁSTROJOV WEB GIS PRE PUBLIKOVANIE ÚDAJOV O
             VODNÝCH NÁDRŽIACH PRE PUBLIKOVANIE ÚDAJOV O VODNÝCH NÁDRŽIACH".
             Zjednodušenú verziu iba s mapou možno nájsť <a href="/lite/">tu <i
@@ -86,10 +90,29 @@
       <div class="row">
         <div class="col-lg-8 mx-auto">
           <h2 class="text-white mb-4">O práci</h2>
-          <p class="text-white-50">
-            Moja diplomová práca je zameraná na praktické využitie nástrojov, ktoré nám ponúka WEB GIS, pre zobrazenie
-            aktuálnej mapy hĺbok vodnej nádrže Jelenec. Bla bla bla... niečo z úvodu...
-            abstraktu... nebo voboji... alebo niečo úplne iné.</p>
+          <p class="text-white-50" style="text-align: justify;text-justify: newspaper">
+            Cieľom práce je grafické zobrazenie aktuálneho stavu zatopenia vodnej nádrže Jelenec formou digitálneho
+            modelu reliéfu,
+            výšky hladiny vody v každom bode rastra, čím vznikne aktuálna mapa hĺbky vody a možnosť lokalizácie
+            mobilného alebo iného zariadenia
+            prehliadajúceho webovú stránku pomocou GPS lokalizácie na mape v reálnom čase. Jednotlivé zariadenia,
+            algoritmy a procesy sú nastavené na pravidelné, automatické meranie s ich následným odosielaním na server
+            pomocou technológie GSM a služby GPRS.
+            Z dôvodu odstránenia odchýlky prebieha filtrácia a eliminácia údajov, ktoré presahujú zvolený rozsah
+            jednotlivých číselných zápisov,
+            čím sa zabezpečí dostatočná presnosť každého merania. Na základe výsledného údaju je automaticky
+            vygenerovaná nová, aktuálna,
+            mapa hĺbky vody vo vodnej nádrži. Server disponuje rôznymi variantmi týchto máp od maximálneho zatopenia
+            nádrže po jej pokles o 1 m,
+            čo stačí na kontrolu rutinných hĺbkových výkyvov od prevádzkovej hladiny.
+            Zaznamenávanie výšky hladiny je zabezpečené vodeodolným ultrazvukovým modulom JSN-SR04T pre meranie
+            vzdialenosti,
+            ktorý je pevne uchytený vo zvolenej výške nad maximálnou hladinou vody v nádrži. Meracie zariadenie je
+            prepojené s modelom Arduino Mega 2560,
+            komunikačným modulom SIMCOM SIM 900 a nadstavbou modulu Arduino GSM Shield SIM900. GSM komunikácia funguje
+            pomocou SIM karty,
+            aká sa používa do bežných mobilných telefónov.
+          </p>
         </div>
       </div>
       <img src="img/arduino2.png" class="img-fluid" alt="">
@@ -107,11 +130,16 @@
         </div>
         <div class="col-xl-8 col-lg-7">
           <div class="featured-text text-center text-lg-left">
-            <h4>Vodná nádrž Jelenec &nbsp;&nbsp;&nbsp;<i class="fas fa-map-marker-alt"> 48.39478, 18.20992 </i></h4>
+            <!-- <i class="fas fa-map-marker-alt"> <i class="fas fa-crosshairs">-->
+            <h4>Vodná nádrž Jelenec &nbsp;&nbsp;&nbsp;<i class="far fa-dot-circle"> 48.39478, 18.20992 </i></h4>
             <p class="text-black-50 mb-0">
-              Aktuálny stav hladiny (mapa hĺbok). 
-              Mapa s rozšírenými možnosťami <a href="/lite/">tu <i class="fas fa-external-link-alt"></i></a>.
-            </p> 
+              Stav hladiny (mapa hĺbok) <i class="fas fa-calendar-day"><span id="stav_den">
+                  21.04.2019</span></i>&nbsp;<i class="far fa-clock"><span id="stav_cas"> 13:34</span></i>
+            </p>
+            <p class="text-black-50 mb-0">
+              Interaktívna mapa s rozšírenými možnosťami <a href="/lite/">tu <i
+                  class="fas fa-external-link-alt"></i></a>.
+            </p>
           </div>
         </div>
       </div>
@@ -139,9 +167,11 @@
         <div class="col-lg-12 order-lg-first">
           <div class="bg-black text-center h-100 project" style="padding:20px">
             <div id="mojamapa" style="height:600px; width: 100%;" />
-          </div> 
+          </div>
         </div>
         <script type="text/javascript">
+          var layer_hlbka = '', datum_mer = '', cas_mer = '';
+
           // https://leafletjs.com/reference-1.4.0.html
 
           // nacitavanie mapy
@@ -161,16 +191,36 @@
           //mierka
           L.control.scale().addTo(mymap);
 
-          //hladina/hlbky
-          var nadrzWms = L.tileLayer.wms('http://webmap.sk:8080/geoserver2112/nitra_students/wms?', {
-            layers: 'nitra_students:435_nanovo',
-            tiled: true,
-            format: 'image/png',
-            transparent: true,
-            maxZoom: 18,
-            minZoom: 15,
-            continuousWorld: true
-          }).addTo( mymap );
+          console.log("php call");
+          jQuery.get("/svc/mapovanie.php", function (response) {
+            console.log(response);
+            var parsed_res = response.split(";");
+            console.log(parsed_res.length);
+            if (parsed_res.length == 3) {
+              datum_mer = parsed_res[0];
+              cas_mer = parsed_res[1];
+              layer_hlbka = parsed_res[2];
+              console.log("res ok");
+              console.log(datum_mer);
+              document.getElementById("stav_den").innerHTML = ' ' + datum_mer;
+              console.log(cas_mer);
+              document.getElementById("stav_cas").innerHTML = ' ' + cas_mer;
+              //hladina/hlbky
+              var nadrzWms = L.tileLayer.wms('http://webmap.sk:8080/geoserver2112/nitra_students/wms?', {
+                //layers: 'nitra_students:435_nanovo',
+                layers: layer_hlbka,
+                tiled: true,
+                format: 'image/png',
+                transparent: true,
+                maxZoom: 18,
+                minZoom: 15,
+                continuousWorld: true
+              }).addTo(mymap);
+              console.log(layer_hlbka);
+            } else {
+              cnsole.log("res nok");
+            }
+          });
 
         </script>
       </div>

@@ -21,23 +21,24 @@
   <!-- LEAFLET: https://leafletjs.com/examples/quick-start/ -->
   <!-- najskor CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
-   integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
-   crossorigin=""/>
-   <!-- potom kniznica -->
-   <!-- <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+    crossorigin="" />
+  <!-- potom kniznica -->
+  <!-- <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
    integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
    crossorigin=""></script>
    <script src="https://unpkg.com/leaflet.wms@0.2.0/dist/leaflet.wms.js" 
    integrity="sha384-ixDRqhwaC8CiUqK6q3rR//gkxROH6Jo2ekssv8GY9ifDKsN53cvFhXof9rfb1Zhs" 
    crossorigin=""></script> -->
-   <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
-   <script src="https://unpkg.com/leaflet.wms@0.2.0/dist/leaflet.wms.js"></script>
-   <script src="https://unpkg.com/jquery@3.4.0/dist/jquery.js"></script>
-  
-   <!-- LEAFLET.LOCATE -->
+  <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.wms@0.2.0/dist/leaflet.wms.js"></script>
+  <script src="https://unpkg.com/jquery@3.4.0/dist/jquery.js"></script>
+
+  <!-- LEAFLET.LOCATE -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js" charset="utf-8"></script>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js"
+    charset="utf-8"></script>
 
   <meta name="theme-color" content="#fafafa">
 </head>
@@ -48,7 +49,7 @@
   <![endif]-->
 
   <!-- Add your site or application content here -->
-  <h1>   Diplomová práca - Bc. Richard Hanzlík</h1>
+  <h1> Diplomová práca - Bc. Richard Hanzlík</h1>
   <br />
 
   <div id="mojamapa" style="height: 600px; width: 90%;margin: 20px"></div>
@@ -62,7 +63,7 @@
 
     var mymap = L.map('mojamapa')
       .setView(nadrz_jelenec, 16);  //suradnice stredu, zoom
-      //.setZoom();
+    //.setZoom();
 
     // navigator.geolocation.getCurrentPosition(function(location) {
     //   var latlng = new L.LatLng(location.coords.latitude, location.coords.longitude);
@@ -71,19 +72,19 @@
 
     //   var marker = L.marker(latlng).addTo(mymap);
     // });
-    
-    L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &vert; <a href="http://www.webmap.sk">WebMap</a>' ,
-        //todo: co su subdomains, ako vypnit?
-        subdomains: ['a','b','c']
-    }).addTo( mymap );
 
-//http://webmap.sk:8080/geoserver2112/nitra_students/wms?
-//service=WMS
-//&version=1.1.0
-//&request=GetMap
-//&layers=nitra_students%3A435_nanovo
-//&styles=&bbox=18.206903150833%2C48.393326432734%2C18.212334347968%2C48.397229732653&width=768&height=551&srs=EPSG%3A4326&format=application%2Fopenlayers#toggle
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &vert; <a href="http://www.webmap.sk">WebMap</a>',
+      //todo: co su subdomains, ako vypnit?
+      subdomains: ['a', 'b', 'c']
+    }).addTo(mymap);
+
+    //http://webmap.sk:8080/geoserver2112/nitra_students/wms?
+    //service=WMS
+    //&version=1.1.0
+    //&request=GetMap
+    //&layers=nitra_students%3A435_nanovo
+    //&styles=&bbox=18.206903150833%2C48.393326432734%2C18.212334347968%2C48.397229732653&width=768&height=551&srs=EPSG%3A4326&format=application%2Fopenlayers#toggle
 
     /*var districtLayer = L.tileLayer.wms('http://webmap.sk:8080/geoserver2112/nitra_students/wms?', {
         layers: 'nitra_students:435_nanovo',
@@ -102,22 +103,22 @@
     var marker = {};
 
     var rickoInfoSource = L.WMS.Source.extend({
-      'showFeatureInfo' : function(latlng, info) {
+      'showFeatureInfo': function (latlng, info) {
         if (!this._map) {
           return; //nie je mapa, nie je kam zobrazovat
         }
         //var hlbka = info.match(/Hlbka = ([0-9]*.[0-9]*)/g);
         //var h = (/Hlbka = ([0-9]*.[0-9]*)/g).exec(info);
-        
+
         //var regexH = /hlbka = (\d*.\d*)/i;
         var regexH = /GRAY_INDEX = (\d*.\d*)/i;
         var match = regexH.exec(info);
-        
+
         //this._map.openPopup(hlbka, latlng);
         //this._map.openPopup(h, latlng);
         //this._map.openPopup(info, latlng);
         //var marker = L.marker(latlng).addTo(this._map);
-        if (marker != undefined){
+        if (marker != undefined) {
           this._map.removeLayer(marker);
         }
 
@@ -129,9 +130,9 @@
 
     //wms
     //var wmsSrc = L.WMS.source('http://webmap.sk:8080/geoserver2112/nitra_students/wms?', {
-      var url = '/svc/wms-proxy.php?url=' + encodeURIComponent('http://webmap.sk:8080/geoserver2112/nitra_students/wms?');
-      // console.log(encodeURIComponent('http://webmap.sk:8080/geoserver2112/nitra_students/wms?'));
-      // var url = 'http://webmap.sk:8080/geoserver2112/nitra_students/wms?';
+    // var url = '/svc/wms-proxy.php?url=' + encodeURIComponent('http://webmap.sk:8080/geoserver2112/nitra_students/wms?');
+    // console.log(encodeURIComponent('http://webmap.sk:8080/geoserver2112/nitra_students/wms?'));
+    var url = 'http://webmap.sk:8080/geoserver2112/nitra_students/wms?';
     var wmsSrc = new rickoInfoSource(url, {
       'transparent': true,
       tiled: true,
@@ -140,19 +141,19 @@
 
     //pre rozne hlbky - definovat funkciu, ktora vrati poslednu nameranu hlbku, podla nej vybrat, ktory layer sa zavola
     //treba aj remove???
-    var layer_hlbka = '';
+    /*var layer_hlbka = '';
     console.log("php call");
     jQuery.get("/svc/mapovanie.php", function(response) {
       console.log(response);
-      layer_hlbka = response;
-      wmsSrc.getLayer(layer_hlbka).addTo(mymap);
-    });/*.error(function(){
-      console.log("Sorry could not proceed");
-    });*/
-    console.log(layer_hlbka);
-    console.log("-----------");
-    //wmsSrc.getLayer("nitra_students:435_nanovo").addTo(mymap);
-    
+      layer_hlbka = response;*/
+    //wmsSrc.getLayer('nitra_students:jelenec_335').addTo(mymap);
+    /* });.error(function(){
+       console.log("Sorry could not proceed");
+     });*/
+    //console.log(layer_hlbka);
+    //console.log("-----------");
+    wmsSrc.getLayer("nitra_students:435_nanovo").addTo(mymap);
+
     //sipka
     //var marker = L.marker(nadrz_jelenec).addTo(mymap);
 
@@ -173,7 +174,7 @@
     // }
 
     // mymap.on('click', onMapClick);
-    
+
     //hlbky
     // -- Display information on click --
 
@@ -210,29 +211,29 @@
     * Specific parameters can be passed as params which will override the
     * calculated parameters of the same name.
     */
-    function getFeatureInfoUrl(map, layer, latlng, params) {
+    /*function getFeatureInfoUrl(map, layer, latlng, params) {
 
       var point = map.latLngToContainerPoint(latlng, map.getZoom()),
-          size = map.getSize(),
-          bounds = map.getBounds(),
-          sw = bounds.getSouthWest(),
-          ne = bounds.getNorthEast(),
-          sw = crs.projection._proj.forward([sw.lng, sw.lat]),
-          ne = crs.projection._proj.forward([ne.lng, ne.lat]);
+        size = map.getSize(),
+        bounds = map.getBounds(),
+        sw = bounds.getSouthWest(),
+        ne = bounds.getNorthEast(),
+        sw = crs.projection._proj.forward([sw.lng, sw.lat]),
+        ne = crs.projection._proj.forward([ne.lng, ne.lat]);
 
       var defaultParams = {
-          request: 'GetFeatureInfo',
-          service: 'WMS',
-          srs: layer._crs.code,
-          styles: '',
-          version: layer._wmsVersion,
-          format: layer.options.format,
-          bbox: [sw.join(','), ne.join(',')].join(','),
-          height: size.y,
-          width: size.x,
-          layers: layer.options.layers,
-          query_layers: layer.options.layers,
-          info_format: 'text/html'
+        request: 'GetFeatureInfo',
+        service: 'WMS',
+        srs: layer._crs.code,
+        styles: '',
+        version: layer._wmsVersion,
+        format: layer.options.format,
+        bbox: [sw.join(','), ne.join(',')].join(','),
+        height: size.y,
+        width: size.x,
+        layers: layer.options.layers,
+        query_layers: layer.options.layers,
+        info_format: 'text/html'
       };
 
       params = L.Util.extend(defaultParams, params || {});
@@ -242,7 +243,7 @@
 
       return layer._url + L.Util.getParamString(params, layer._url, true);
 
-  }
+    }*/
 
     // var popup = L.popup();
 
@@ -263,11 +264,11 @@
 
   <!-- <iframe src="http://webmap.sk:8080/geoserver2112/nitra_students/wms?service=WMS&version=1.1.0&request=GetMap&layers=nitra_students%3A435_nanovo&styles=&bbox=18.206903150833%2C48.393326432734%2C18.212334347968%2C48.397229732653&width=768&height=551&srs=EPSG%3A4326&format=application%2Fopenlayers#toggle" allowfullscreen></iframe> -->
 
-  <script src="js/vendor/modernizr-3.7.1.min.js"></script>
+  <!-- <script src="js/vendor/modernizr-3.7.1.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
   <script>window.jQuery || document.write('<script src="js/vendor/jquery-3.3.1.min.js"><\/script>')</script>
   <script src="js/plugins.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js/main.js"></script> -->
 
   <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
   <!-- <script>
