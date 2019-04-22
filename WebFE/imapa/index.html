@@ -28,8 +28,19 @@
     integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
     crossorigin="" />
   <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+  
   <!-- jQuery - kvoli volaniu svc (sluzieb) -->
   <script src="https://unpkg.com/jquery@3.4.0/dist/jquery.js"></script>
+  
+  <!-- lefalet.wms -->
+  <script src="https://unpkg.com/leaflet.wms@0.2.0/dist/leaflet.wms.js"></script>
+
+  <!-- LEAFLET.LOCATE -->
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js"
+    charset="utf-8"></script>
+
 </head>
 
 <body id="page-top">
@@ -37,26 +48,7 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-black" id="mainNav">
     <div class="container">
-      <a class="navbar-brand js-scroll-trigger" href="/#page-top"><i class="fas fa-home"></i></a>
-      <!-- <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
-        data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
-        aria-label="Toggle navigation">
-        Menu
-        <i class="fas fa-bars"></i>
-      </button> -->
-      <!-- <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#about">O stránke</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#projects">Mapa</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#contact">Kontakt</a>
-          </li>
-        </ul>
-      </div> -->
+      <a class="navbar-brand js-scroll-trigger"><i class="fas fa-home"></i></a>
     </div>
   </nav>
 
@@ -79,13 +71,13 @@
     <div class="container">
 
       <div class="row align-items-center no-gutters mb-4 mb-lg-5">
-          <p class="text-black-50 mb-0">
-              Stav 
-              <i class="fas fa-calendar-day"><span id="stav_den">21.04.2019</span></i>&nbsp;
-              <i class="far fa-clock"><span id="stav_cas"> 13:34 </span></i>&nbsp;
-              <i class="fas fa-map-pin"><span id="miesto"> 48.39478, 18.20992 </span></i>&nbsp;
-              <i class="fas fa-arrows-alt-v"><span id="hlbka">6.7 m</span></i>
-            </p>
+        <p class="text-black-50 mb-0">
+          Stav
+          <i class="fas fa-calendar-day"><span id="stav_den">21.04.2019</span></i>&nbsp;
+          <i class="far fa-clock"><span id="stav_cas"> 13:34 </span></i>&nbsp;
+          <i class="fas fa-map-pin"><span id="miesto"> 48.39478, 18.20992 </span></i>&nbsp;
+          <i class="fas fa-arrows-alt-v"><span id="hlbka">6.7 m</span></i>
+        </p>
       </div>
       <div class="row align-items-center no-gutters mb-4 mb-lg-5">
         <div class="col-lg-12 order-lg-first">
@@ -115,6 +107,37 @@
           //mierka
           L.control.scale().addTo(mymap);
 
+          L.control.locate().addTo(mymap);
+
+          var rickoInfoSource = L.WMS.Source.extend({
+            'showFeatureInfo': function (latlng, info) {
+              if (!this._map) {
+                return; //nie je mapa, nie je kam zobrazovat
+              }
+              //var hlbka = info.match(/Hlbka = ([0-9]*.[0-9]*)/g);
+              //var h = (/Hlbka = ([0-9]*.[0-9]*)/g).exec(info);
+
+              //var regexH = /hlbka = (\d*.\d*)/i;
+              var regexH = /GRAY_INDEX = (\d*.\d*)/i;
+              var match = regexH.exec(info);
+
+              //this._map.openPopup(hlbka, latlng);
+              //this._map.openPopup(h, latlng);
+              //this._map.openPopup(info, latlng);
+              //var marker = L.marker(latlng).addTo(this._map);
+              if (marker != undefined) {
+                this._map.removeLayer(marker);
+              }
+
+              marker = L.marker(latlng).addTo(this._map);
+              //document.getElementById("hlbka").innerHTML = info;
+              document.getElementById("hlbka").innerHTML = match[1];
+            }
+          });
+
+
+
+          //ziskanie aktualnej vrstvy hladiny
           console.log("php call");
           jQuery.get("/svc/mapovanie.php", function (response) {
             console.log(response);
@@ -130,7 +153,8 @@
               console.log(cas_mer);
               document.getElementById("stav_cas").innerHTML = ' ' + cas_mer;
               //hladina/hlbky
-              var nadrzWms = L.tileLayer.wms('http://webmap.sk:8080/geoserver2112/nitra_students/wms?', {
+              var nadrzWms = L.tileLayer.wms('/svc/wms-proxy.php?', {
+              //var nadrzWms = L.tileLayer.wms('http://webmap.sk:8080/geoserver2112/nitra_students/wms?', {
                 //layers: 'nitra_students:435_nanovo',
                 layers: layer_hlbka,
                 tiled: true,

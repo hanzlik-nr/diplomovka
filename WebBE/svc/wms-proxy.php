@@ -6,16 +6,18 @@
 
     $req_uri = $_SERVER[REQUEST_URI];
 
-    $url = str_replace("/svc/wms-proxy.php?url=","",$req_uri);
+    //"PROXY", vymiename "lokalnu" URL za tu, ktoru chceme realne volat (v tomto pripade WMS)
+    $url = str_replace("/svc/wms-proxy.php?","http://webmap.sk:8080/geoserver2112/nitra_students/wms?",$req_uri);
 
-    /*
-    GET_???
+    //echo $req_uri."<br />".$url;
+
+    //GET_???
     //echo $url;
 
     //$url = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
     //Once again, we use file_get_contents to GET the URL in question.
-    $headers = get_headers($url);
+    //$headers = get_headers($url);
     
     //echo var_dump($headers);
     $contents = file_get_contents($url);
@@ -23,15 +25,17 @@
     //If $contents is not a boolean FALSE value.
     //if($contents !== false){
         //Print out the contents.
-        echo var_dump($contents);// imagecreatefromstring(file_get_contents($url));
+        header('Content-type: image/png');
+        echo $contents;
+        //echo var_dump($contents);// imagecreatefromstring(file_get_contents($url));
     //}
-    */
+
     /*
 
     cURL
 
     */
-
+    /*
     $ch = curl_init();
  
     //Set the URL that you want to GET by using the CURLOPT_URL option.
@@ -73,3 +77,5 @@
     //Print the data out onto the page.
     //echo var_dump($data);
  // }
+ */
+?>
