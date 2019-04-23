@@ -28,10 +28,10 @@
     integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
     crossorigin="" />
   <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
-  
+
   <!-- jQuery - kvoli volaniu svc (sluzieb) -->
   <script src="https://unpkg.com/jquery@3.4.0/dist/jquery.js"></script>
-  
+
   <!-- lefalet.wms -->
   <script src="https://unpkg.com/leaflet.wms@0.2.0/dist/leaflet.wms.js"></script>
 
@@ -72,11 +72,11 @@
 
       <div class="row align-items-center no-gutters mb-4 mb-lg-5">
         <p class="text-black-50 mb-0">
-          Stav
-          <i class="fas fa-calendar-day"><span id="stav_den">21.04.2019</span></i>&nbsp;
-          <i class="far fa-clock"><span id="stav_cas"> 13:34 </span></i>&nbsp;
-          <i class="fas fa-map-pin"><span id="miesto"> 48.39478, 18.20992 </span></i>&nbsp;
-          <i class="fas fa-arrows-alt-v"><span id="hlbka">6.7 m</span></i>
+          <i class="fas fa-calendar-day"><span id="stav_den" title="datum">21.04.2019</span></i>&nbsp;
+          <i class="far fa-clock"><span id="stav_cas" title="cas"> 13:34 </span></i>
+          <i class="fas fa-map-pin"><span id="miesto" title="zvolene suradnice"> 48.39478, 18.20992 </span></i>&nbsp;
+          <i class="fas fa-arrows-alt-v"><span id="hlbka" title="hlbka">6.7 m</span></i>
+          <i class="fas fa-info-circle"><span id="info" title="maximálna hladina: 217,56 m n. m.; prevádzková hladina: 216,96 m n. m.; minimálna hladina: 215,56 m n. m."></span></i>
         </p>
       </div>
       <div class="row align-items-center no-gutters mb-4 mb-lg-5">
@@ -109,33 +109,51 @@
 
           L.control.locate().addTo(mymap);
 
+          var marker = {};
           var rickoInfoSource = L.WMS.Source.extend({
             'showFeatureInfo': function (latlng, info) {
               if (!this._map) {
+                console.log('showFeatureInfo: no map => exit');
                 return; //nie je mapa, nie je kam zobrazovat
               }
-              //var hlbka = info.match(/Hlbka = ([0-9]*.[0-9]*)/g);
-              //var h = (/Hlbka = ([0-9]*.[0-9]*)/g).exec(info);
 
-              //var regexH = /hlbka = (\d*.\d*)/i;
-              var regexH = /GRAY_INDEX = (\d*.\d*)/i;
-              var match = regexH.exec(info);
+              console.log('showFeatureInfo(' + latlng + ', ' + info + ')');
 
               //this._map.openPopup(hlbka, latlng);
               //this._map.openPopup(h, latlng);
               //this._map.openPopup(info, latlng);
-              //var marker = L.marker(latlng).addTo(this._map);
+
               if (marker != undefined) {
                 this._map.removeLayer(marker);
               }
+              document.getElementById("miesto").innerHTML = "";
+              document.getElementById("hlbka").innerHTML = "";
 
-              marker = L.marker(latlng).addTo(this._map);
-              //document.getElementById("hlbka").innerHTML = info;
-              document.getElementById("hlbka").innerHTML = match[1];
+              //testujeme vratene udaje, kvoli kliknutiam mimo nadrz
+              if (latlng != null && info != null) {
+
+                console.log('latlng defined, info defined');
+                //vytiahnutie udaja o hlbke z odpovede pomocou regex group
+                var regexH = /GRAY_INDEX = (\d*.\d*)/i;
+                var match = regexH.exec(info);
+
+                var h = Number(match[1]);
+                console.log("h: " + h + ", match[1]: " + match[1])
+                if (h != undefined && h >= 0){
+                  marker = L.marker(latlng).addTo(this._map);
+                  document.getElementById("miesto").innerHTML = parseFloat(latlng.lat).toFixed(6) + ";" + parseFloat(latlng.lng).toFixed(6);
+                  document.getElementById("hlbka").innerHTML = h.toFixed(2) + "m";
+                }
+              }
             }
           });
 
-
+          var wms_proxy_url = "/svc/wms-proxy.php?";//'http://webmap.sk:8080/geoserver2112/nitra_students/wms?';
+          var wmsSrc = new rickoInfoSource(wms_proxy_url, {
+            'transparent': true,
+            tiled: true,
+            format: 'image/png',
+          });
 
           //ziskanie aktualnej vrstvy hladiny
           console.log("php call");
@@ -153,17 +171,18 @@
               console.log(cas_mer);
               document.getElementById("stav_cas").innerHTML = ' ' + cas_mer;
               //hladina/hlbky
-              var nadrzWms = L.tileLayer.wms('/svc/wms-proxy.php?', {
+              wmsSrc.getLayer(layer_hlbka).addTo(mymap);
+              //var nadrzWms = L.tileLayer.wms('/svc/wms-proxy.php?', {
               //var nadrzWms = L.tileLayer.wms('http://webmap.sk:8080/geoserver2112/nitra_students/wms?', {
-                //layers: 'nitra_students:435_nanovo',
-                layers: layer_hlbka,
-                tiled: true,
-                format: 'image/png',
-                transparent: true,
-                maxZoom: 18,
-                minZoom: 15,
-                continuousWorld: true
-              }).addTo(mymap);
+              //layers: 'nitra_students:435_nanovo',
+              //layers: layer_hlbka,
+              //   tiled: true,
+              //   format: 'image/png',
+              //   transparent: true,
+              //   maxZoom: 18,
+              //   minZoom: 15,
+              //   continuousWorld: true
+              // }).addTo(mymap);
               console.log(layer_hlbka);
             } else {
               cnsole.log("res nok");
