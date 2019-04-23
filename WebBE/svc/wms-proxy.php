@@ -1,4 +1,9 @@
 <?php
+    //udaje pre prihlasenie do DB
+    $servername = "localhost";
+    $username = "id9038554_userrha";
+    $password = "Heslo.123";
+    $dbname = "id9038554_diplomovka";
   //if (isset($_SERVER[REQUEST_URI])) {
 
     //The URL with parameters / query string.
@@ -22,6 +27,26 @@
     //echo var_dump($headers);
     $contents = file_get_contents($url);
     
+    // Create connection
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    } 
+
+    //$sql = "INSERT INTO wms_proxy_log (request_orig, request_prox, response) VALUES ('$req_uri','$url','$contents')";
+    $sql = "INSERT INTO wms_proxy_log (request_orig, request_prox) VALUES ('$req_uri','$url')";
+    //$sql = "INSERT INTO meranie (hodnota) VALUES ({$vzdialenost})";
+
+    if ($conn->query($sql) === TRUE) {
+        //echo "OK (vv=$hlad_nmv)";
+        //, a: $ard_nmv, d: $dno_nmv";
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
+
+    $conn->close();
+
     //If $contents is not a boolean FALSE value.
     //if($contents !== false){
         //Print out the contents.

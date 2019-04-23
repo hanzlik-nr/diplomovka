@@ -74,9 +74,11 @@
         <p class="text-black-50 mb-0">
           <i class="fas fa-calendar-day"><span id="stav_den" title="datum">21.04.2019</span></i>&nbsp;
           <i class="far fa-clock"><span id="stav_cas" title="cas"> 13:34 </span></i>
-          <i class="fas fa-map-pin"><span id="miesto" title="zvolene suradnice"> 48.39478, 18.20992 </span></i>&nbsp;
-          <i class="fas fa-arrows-alt-v"><span id="hlbka" title="hlbka">6.7 m</span></i>
-          <i class="fas fa-info-circle"><span id="info" title="maximálna hladina: 217,56 m n. m.; prevádzková hladina: 216,96 m n. m.; minimálna hladina: 215,56 m n. m."></span></i>
+          <i class="fas fa-map-pin" id="latlng_main"><span id="latlng" title="zvolene suradnice"> 48.39478, 18.20992
+            </span></i>&nbsp;
+          <i class="fas fa-arrows-alt-v" id="hlbka_main"><span id="hlbka" title="hlbka">6.7 m</span></i>
+          <i class="fas fa-info-circle"><span id="info"
+              title="maximálna hladina: 217,56 m n. m.; prevádzková hladina: 216,96 m n. m.; minimálna hladina: 215,56 m n. m."></span></i>
         </p>
       </div>
       <div class="row align-items-center no-gutters mb-4 mb-lg-5">
@@ -87,6 +89,14 @@
         </div>
         <script type="text/javascript">
           var layer_hlbka = '', datum_mer = '', cas_mer = '';
+
+          var latlngIco = document.getElementById("latlng_main");
+          var latlngText = document.getElementById("latlng");
+          var hlbkaIco = document.getElementById("hlbka_main");
+          var hlbkaText = document.getElementById("hlbka");
+
+          latlngIco.hidden = true;
+          hlbkaIco.hidden = true;
 
           // https://leafletjs.com/reference-1.4.0.html
 
@@ -123,11 +133,14 @@
               //this._map.openPopup(h, latlng);
               //this._map.openPopup(info, latlng);
 
+              //hide previous location info
               if (marker != undefined) {
                 this._map.removeLayer(marker);
               }
-              document.getElementById("miesto").innerHTML = "";
-              document.getElementById("hlbka").innerHTML = "";
+              latlngIco.hidden = true;
+              hlbkaIco.hidden = true;
+              //document.getElementById("miesto").innerHTML = "";
+              //document.getElementById("hlbka").innerHTML = "";
 
               //testujeme vratene udaje, kvoli kliknutiam mimo nadrz
               if (latlng != null && info != null) {
@@ -139,10 +152,12 @@
 
                 var h = Number(match[1]);
                 console.log("h: " + h + ", match[1]: " + match[1])
-                if (h != undefined && h >= 0){
+                if (h != undefined && h >= 0) {
                   marker = L.marker(latlng).addTo(this._map);
-                  document.getElementById("miesto").innerHTML = parseFloat(latlng.lat).toFixed(6) + ";" + parseFloat(latlng.lng).toFixed(6);
-                  document.getElementById("hlbka").innerHTML = h.toFixed(2) + "m";
+                  latlngText.innerHTML = parseFloat(latlng.lat).toFixed(6) + ";" + parseFloat(latlng.lng).toFixed(6);
+                  hlbkaText.innerHTML = h.toFixed(2) + "m";
+                  latlngIco.hidden = false;
+                  hlbkaIco.hidden = false;
                 }
               }
             }
