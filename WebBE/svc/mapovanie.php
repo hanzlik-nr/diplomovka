@@ -15,7 +15,7 @@
         //$hodnota = $_GET['h'];
 
         //$sql = "INSERT INTO meranie (hodnota) VALUES ({$hodnota})";
-        $sql = "SELECT map.vrstva vrstva, mer.cas_merania cas FROM meranie mer JOIN mapovanie map ON map.hodnotaOd <= (mer.hodnota) AND (mer.hodnota) <= map.hodnotaDo ORDER BY mer.id DESC LIMIT 1";
+        $sql = "SELECT map.vrstva vrstva, mer.cas_merania cas, (hodnota + dno_nmv) hladina FROM meranie mer JOIN mapovanie map ON map.hodnotaOd <= (mer.hodnota) AND (mer.hodnota) <= map.hodnotaDo ORDER BY mer.id DESC LIMIT 1";
 
         $result = $conn->query($sql);
 
@@ -24,6 +24,7 @@
             while($row = $result->fetch_assoc()) {
                 $cas = $row['cas'];
                 $vrstva = $row['vrstva'];
+                $hladina = $row['hladina'];
                 //echo join(', ', $row);
             }
         } else {
@@ -32,7 +33,7 @@
 
         $date=date_create($cas);
         date_add($date,date_interval_create_from_date_string("2 hours"));
-        echo date_format($date,"d.m.Y").";".date_format($date,"H:i:s").";".$vrstva;
+        echo date_format($date,"d.m.Y").";".date_format($date,"H:i:s").";".$hladina.";".$vrstva;
 
         $conn->close();
 ?>

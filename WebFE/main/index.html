@@ -82,7 +82,7 @@
           <p class="text-white-50" style="text-align: justify;text-justify: newspaper">
             Toto je prezentačná stránka k mojej diplomovej práci "VYUŽITIE NÁSTROJOV WEB GIS PRE PUBLIKOVANIE ÚDAJOV O
             VODNÝCH NÁDRŽIACH PRE PUBLIKOVANIE ÚDAJOV O VODNÝCH NÁDRŽIACH".
-            Zjednodušenú verziu iba s mapou možno nájsť <a href="/imapa/">tu <i
+            Zjednodušenú verziu iba s mapou možno nájsť <a href="/imapa/" target="_blank">tu <i
                 class="fas fa-external-link-alt"></i></a>.
           </p>
         </div>
@@ -137,7 +137,7 @@
                   21.04.2019</span></i>&nbsp;<i class="far fa-clock"><span id="stav_cas"> 13:34</span></i>
             </p>
             <p class="text-black-50 mb-0">
-              Interaktívna mapa s rozšírenými možnosťami <a href="/imapa/">tu <i
+              Interaktívna mapa s rozšírenými možnosťami <a href="/imapa/" target="_blank">tu <i
                   class="fas fa-external-link-alt"></i></a>.
             </p>
           </div>
@@ -183,7 +183,7 @@
 
           //zaklad - mapa z openstreetmap
           L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &vert; <a href="http://www.webmap.sk">WebMap</a>',
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" title="OpenStreetMap (OSM) is a collaborative project to create a free editable map of the world.">OpenStreetMap</a> &vert; <a href="http://www.webmap.sk" target="_blank" title="Priestor pre webové GIS projekty, ktoré stoja na open source softvéri.">WebMap</a>',
             //https://gis.stackexchange.com/questions/198088/leaflet-subdomains-if-subdomain-is-down-attempt-another
             subdomains: ['a', 'b', 'c']
           }).addTo(mymap);
@@ -206,7 +206,8 @@
               console.log(cas_mer);
               document.getElementById("stav_cas").innerHTML = ' ' + cas_mer;
               //hladina/hlbky
-              var nadrzWms = L.tileLayer.wms('http://webmap.sk:8080/geoserver2112/nitra_students/wms?', {
+              var wms_proxy_url = "/svc/wms-proxy.php?";//'http://webmap.sk:8080/geoserver2112/nitra_students/wms?';
+              var nadrzWms = L.tileLayer.wms(wms_proxy_url, {
                 //layers: 'nitra_students:435_nanovo',
                 layers: layer_hlbka,
                 tiled: true,
@@ -292,7 +293,7 @@
               <h4 class="text-uppercase m-0">Email</h4>
               <hr class="my-4">
               <div class="small text-black-50">
-                <a href="#">hanzlik.richard94@gmail.com</a>
+                <a href="mailto:hanzlik.richard94@gmail.com">hanzlik.richard94@gmail.com</a>
               </div>
             </div>
           </div>
@@ -314,10 +315,10 @@
         <!--<a href="#" class="mx-2">
           <i class="fab fa-twitter"></i>
         </a>-->
-        <a href="https://www.facebook.com/profile.php?id=100008748339356" class="mx-2">
+        <a href="https://www.facebook.com/profile.php?id=100008748339356" target="_blank" class="mx-2">
           <i class="fab fa-facebook-f"></i>
         </a>
-        <a href="https://github.com/hanzlik-nr/diplomovka" class="mx-2">
+        <a href="https://github.com/hanzlik-nr/diplomovka" target="_blank" class="mx-2">
           <i class="fab fa-github"></i>
         </a>
       </div>

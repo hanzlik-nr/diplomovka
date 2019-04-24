@@ -48,7 +48,7 @@
             //nadmorska vyska hladiny (nadmorska vyska arduina - vzdialenost k hladine) - nadmorska vyska dna (najnizsi bod)
             $hlad_nmv = $ard_nmv - ($vzdialenost / 100) - $dno_nmv;
 
-            $sql = "INSERT INTO meranie (hodnota) VALUES ({$hlad_nmv})";
+            $sql = "INSERT INTO meranie (hodnota, dno_nmv) VALUES (".$hlad_nmv.",".$dno_nmv.")";
             //$sql = "INSERT INTO meranie (hodnota) VALUES ({$vzdialenost})";
 
             if ($conn->query($sql) === TRUE) {

@@ -34,9 +34,13 @@
         die("Connection failed: " . $conn->connect_error);
     } 
 
+    $headers = get_headers($url);
     //$sql = "INSERT INTO wms_proxy_log (request_orig, request_prox, response) VALUES ('$req_uri','$url','$contents')";
     $sql = "INSERT INTO wms_proxy_log (request_orig, request_prox) VALUES ('$req_uri','$url')";
     //$sql = "INSERT INTO meranie (hodnota) VALUES ({$vzdialenost})";
+
+    //$headers_txt = implode("","", $headers)
+    //$sql = "INSERT INTO wms_proxy_log (request_orig, request_prox, res_headers) VALUES ('$req_uri','$url','$headers_txt')";
 
     if ($conn->query($sql) === TRUE) {
         //echo "OK (vv=$hlad_nmv)";
@@ -55,52 +59,6 @@
         //echo var_dump($contents);// imagecreatefromstring(file_get_contents($url));
     //}
 
-    /*
+  //https://www.dougv.com/2012/03/converting-latitude-and-longitude-coordinates-between-decimal-and-degrees-minutes-seconds/
 
-    cURL
-
-    */
-    /*
-    $ch = curl_init();
- 
-    //Set the URL that you want to GET by using the CURLOPT_URL option.
-    curl_setopt($ch, CURLOPT_URL, $url);
-    
-    //Set CURLOPT_RETURNTRANSFER so that the content is returned as a variable.
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    //curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HEADER, true);       // enabled response headers
-    
-    //Set CURLOPT_FOLLOWLOCATION to true to follow redirects.
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    
-    //Execute the request.
-    $data = curl_exec($ch);
-    
-    //Close the cURL handle.
-    curl_close($ch);
-
-    // split response to header and content
-    list($response_headers, $response_content) = preg_split('/(\r\n){2}/', $response, 2);
-    
-    // (re-)send the headers
-    $response_headers = preg_split('/(\r\n){1}/', $response_headers);
-    foreach ($response_headers as $key => $response_header) {
-      // Rewrite the `Location` header, so clients will also use the proxy for redirects.
-      if (preg_match('/^Location:/', $response_header)) {
-        list($header, $value) = preg_split('/: /', $response_header, 2);
-        $response_header = 'Location: ' . $_SERVER['REQUEST_URI'] . '?csurl=' . $value;
-      }
-      if (!preg_match('/^(Transfer-Encoding):/', $response_header)) {
-        header($response_header, false);
-      }
-    }
-
-    // finally, output the content
-    print($response_content);
-
-    //Print the data out onto the page.
-    //echo var_dump($data);
- // }
- */
 ?>

@@ -72,13 +72,17 @@
 
       <div class="row align-items-center no-gutters mb-4 mb-lg-5">
         <p class="text-black-50 mb-0">
-          <i class="fas fa-calendar-day"><span id="stav_den" title="datum">21.04.2019</span></i>&nbsp;
-          <i class="far fa-clock"><span id="stav_cas" title="cas"> 13:34 </span></i>
-          <i class="fas fa-map-pin" id="latlng_main"><span id="latlng" title="zvolene suradnice"> 48.39478, 18.20992
+          <i class="fas fa-calendar-day"><span id="stav_den"
+              title="Dátum posledného merania">21.04.2019</span></i>&nbsp;
+          <i class="far fa-clock"><span id="stav_cas" title="Čas posledného merania"> 13:34 </span></i>
+          <i class="fas fa-map-marker-alt" id="latlng_main"><span id="latlng" title="Zvolené súradnice"> 48.39478,
+              18.20992
             </span></i>&nbsp;
-          <i class="fas fa-arrows-alt-v" id="hlbka_main"><span id="hlbka" title="hlbka">6.7 m</span></i>
-          <i class="fas fa-info-circle"><span id="info"
-              title="maximálna hladina: 217,56 m n. m.; prevádzková hladina: 216,96 m n. m.; minimálna hladina: 215,56 m n. m."></span></i>
+          <i class="fas fa-arrows-alt-v" id="hlbka_main"><span id="hlbka" title="Hĺbka">6.7 m</span></i>
+          <i class="fas fa-water" id="hladina_kota_main"><span id="hladina_kota" title="Kóta hladiny">300m</span></i>
+          <i class="far fa-dot-circle" id="recenter" title="Vycentrovať nádrž"></i>
+          <i class="fas fa-info-circle"
+            title="Maximálna hladina: 217,56 m n. m.&#013;Prevádzková hladina: 216,96 m n. m.&#013;Minimálna hladina: 215,56 m n. m."></i>
         </p>
       </div>
       <div class="row align-items-center no-gutters mb-4 mb-lg-5">
@@ -88,15 +92,21 @@
           <!-- </div> -->
         </div>
         <script type="text/javascript">
-          var layer_hlbka = '', datum_mer = '', cas_mer = '';
+          var layer_hlbka = '', datum_mer = '', cas_mer = '', hladina = '';
 
           var latlngIco = document.getElementById("latlng_main");
           var latlngText = document.getElementById("latlng");
           var hlbkaIco = document.getElementById("hlbka_main");
           var hlbkaText = document.getElementById("hlbka");
-
+          var hladinaIco = document.getElementById("hladina_kota_main");
+          var hladinaText = document.getElementById("hladina_kota");
+          var stavDenText = document.getElementById("stav_den");
+          var stavCasText = document.getElementById("stav_cas");
+          var recenter = document.getElementById("stav_cas");
+          //recenter.onclick()
           latlngIco.hidden = true;
           hlbkaIco.hidden = true;
+          hladinaIco.hidden = true;
 
           // https://leafletjs.com/reference-1.4.0.html
 
@@ -107,9 +117,13 @@
           var mymap = L.map('mojamapa')
             .setView(nadrz_jelenec, 16);  //suradnice stredu, zoom
 
+          recenter.onclick = function () {
+            mymap.setView(nadrz_jelenec, 16);  //suradnice stredu, zoom
+          };
+
           //zaklad - mapa z openstreetmap
           L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &vert; <a href="http://www.webmap.sk">WebMap</a>',
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" title="OpenStreetMap (OSM) is a collaborative project to create a free editable map of the world.">OpenStreetMap</a> &vert; <a href="http://www.webmap.sk" target="_blank" title="Priestor pre webové GIS projekty, ktoré stoja na open source softvéri.">WebMap</a>',
             //https://gis.stackexchange.com/questions/198088/leaflet-subdomains-if-subdomain-is-down-attempt-another
             subdomains: ['a', 'b', 'c']
           }).addTo(mymap);
@@ -154,10 +168,11 @@
                 console.log("h: " + h + ", match[1]: " + match[1])
                 if (h != undefined && h >= 0) {
                   marker = L.marker(latlng).addTo(this._map);
-                  latlngText.innerHTML = parseFloat(latlng.lat).toFixed(6) + ";" + parseFloat(latlng.lng).toFixed(6);
-                  hlbkaText.innerHTML = h.toFixed(2) + "m";
+                  latlngText.innerHTML = ' ' + parseFloat(latlng.lat).toFixed(6) + ";" + parseFloat(latlng.lng).toFixed(6);
+                  hlbkaText.innerHTML = ' ' + h.toFixed(2) + "m";
                   latlngIco.hidden = false;
                   hlbkaIco.hidden = false;
+                  hladinaIco.hidden = false;
                 }
               }
             }
@@ -176,15 +191,19 @@
             console.log(response);
             var parsed_res = response.split(";");
             console.log(parsed_res.length);
-            if (parsed_res.length == 3) {
+            if (parsed_res.length == 4) {
               datum_mer = parsed_res[0];
               cas_mer = parsed_res[1];
-              layer_hlbka = parsed_res[2];
+              hladina = parsed_res[2];
+              layer_hlbka = parsed_res[3];
               console.log("res ok");
               console.log(datum_mer);
-              document.getElementById("stav_den").innerHTML = ' ' + datum_mer;
+              stavDenText.innerHTML = ' ' + datum_mer;
               console.log(cas_mer);
-              document.getElementById("stav_cas").innerHTML = ' ' + cas_mer;
+              stavCasText.innerHTML = ' ' + cas_mer;
+              console.log(hladina);
+              hladinaText.innerHTML = ' ' + hladina + 'm n.m.';
+              hladinaIco.hidden = false;
               //hladina/hlbky
               wmsSrc.getLayer(layer_hlbka).addTo(mymap);
               //var nadrzWms = L.tileLayer.wms('/svc/wms-proxy.php?', {
