@@ -113,6 +113,12 @@
             pomocou SIM karty,
             aká sa používa do bežných mobilných telefónov.
           </p>
+          <p class="text-white-50" style="text-align: justify;text-justify: newspaper">
+            Vedúcim diplomovej práce je Ing. Jakub Fuska, PhD. Diplomová práca bola riešená na Katedre krajinného inžinierstva 
+            na <a href="http://www.fzki.uniag.sk/sk/" target="_blank" >Fakulte Záhradníctva a Krajinného inžinierstva Slovenskej poľnohospodárskej univerzity v Nitre</a>. 
+            WebGIS riešenie využíva infraštruktúru projektu <a href="http://webmap.sk" target="_blank" >Webmap</a>. Za možnosť realizácie WebGIS časti mojej práce sa 
+            týmto chcem poďakovať <a href="http://amavet962.org/" target="_blank" >Amavet klubu č. 962</a>, ktorý prevádzkuje projekt Webmap.
+          </p>
         </div>
       </div>
       <img src="img/arduino2.png" class="img-fluid" alt="">
@@ -182,7 +188,7 @@
             .setView(nadrz_jelenec, 16);  //suradnice stredu, zoom
 
           //zaklad - mapa z openstreetmap
-          L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" title="OpenStreetMap (OSM) is a collaborative project to create a free editable map of the world.">OpenStreetMap</a> &vert; <a href="http://www.webmap.sk" target="_blank" title="Priestor pre webové GIS projekty, ktoré stoja na open source softvéri.">WebMap</a>',
             //https://gis.stackexchange.com/questions/198088/leaflet-subdomains-if-subdomain-is-down-attempt-another
             subdomains: ['a', 'b', 'c']
@@ -196,10 +202,10 @@
             console.log(response);
             var parsed_res = response.split(";");
             console.log(parsed_res.length);
-            if (parsed_res.length == 3) {
+            if (parsed_res.length == 4) {
               datum_mer = parsed_res[0];
               cas_mer = parsed_res[1];
-              layer_hlbka = parsed_res[2];
+              layer_hlbka = parsed_res[3];
               console.log("res ok");
               console.log(datum_mer);
               document.getElementById("stav_den").innerHTML = ' ' + datum_mer;
@@ -219,7 +225,7 @@
               }).addTo(mymap);
               console.log(layer_hlbka);
             } else {
-              cnsole.log("res nok");
+              console.log("res nok");
             }
           });
 
