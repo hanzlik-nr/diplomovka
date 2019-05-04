@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- https://stackoverflow.com/questions/15641142/bootstrap-fill-fluid-container-between-header-and-footer -->
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="diplomová práca">
+  <meta name="author" content="Bc. Richard Hanzlík">
+
+  <title>Bc. Richard Hanzlík - Diplomová práca - Jelenec</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+    rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <!-- minifiy: https://cssminifier.com/ -->
+  <link href="css/rha.imapa.css" rel="stylesheet">
+
+  <!-- LEAFLET - MAPS/GIS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+    crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+
+  <!-- jQuery - kvoli volaniu svc (sluzieb) -->
+  <script src="https://unpkg.com/jquery@3.4.0/dist/jquery.js"></script>
+
+  <!-- lefalet.wms -->
+  <script src="https://unpkg.com/leaflet.wms@0.2.0/dist/leaflet.wms.js"></script>
+
+  <!-- LEAFLET.LOCATE -->
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js"
+    charset="utf-8"></script>
+
+</head>
+
+<body class="d-flex flex-column">
+
+  <header class="bg-black text-center text-white-50" >
+    <a href="/"><i class="fas fa-home" style="color:white"></i></a>
+    &nbsp;ver. 2.0beta&nbsp;
+    <i class="far fa-dot-circle" id="recenter" title="Vycentrovať nádrž" style="color:white"></i>
+    <i class="fas fa-info-circle" style="color:white"
+      title="Maximálna hladina: 217,56 m n. m.&#013;Prevádzková hladina: 216,96 m n. m.&#013;Minimálna hladina: 215,56 m n. m."></i>
+    </p>
+  </header>
+
+  <!-- Projects / Map Section -->
+  <main class="container-fluid flex-fill">
+    <i class="fas fa-calendar-day"><span id="stav_den" title="Dátum posledného merania">21.04.2019</span></i>&nbsp;
+    <i class="far fa-clock"><span id="stav_cas" title="Čas posledného merania"> 13:34 </span></i>
+    <i class="fas fa-map-marker-alt" id="latlng_main"><span id="latlng" title="Zvolené súradnice"> 48.39478,
+        18.20992
+      </span></i>&nbsp;
+    <i class="fas fa-arrows-alt-v" id="hlbka_main"><span id="hlbka" title="Hĺbka">6.7 m</span></i>
+    <i class="fas fa-water" id="hladina_kota_main"><span id="hladina_kota" title="Kóta hladiny">300m</span></i>
+    </div>
+    <!-- <div class="row align-items-center no-gutters mb-4 mb-lg-5">
+      <div class="col-lg-12 order-lg-first"> -->
+    <!-- <div class="bg-black text-center h-100 project> -->
+    <div id="mojamapa" style="height:95%; width: 100%;"></div>
+    <!-- </div> -->
+    <!-- </div> -->
+    <script type="text/javascript">
+      var layer_hlbka = '', datum_mer = '', cas_mer = '', hladina = '';
+
+      var latlngIco = document.getElementById("latlng_main");
+      var latlngText = document.getElementById("latlng");
+      var hlbkaIco = document.getElementById("hlbka_main");
+      var hlbkaText = document.getElementById("hlbka");
+      var hladinaIco = document.getElementById("hladina_kota_main");
+      var hladinaText = document.getElementById("hladina_kota");
+      var stavDenText = document.getElementById("stav_den");
+      var stavCasText = document.getElementById("stav_cas");
+      var recenter = document.getElementById("stav_cas");
+      //recenter.onclick()
+      latlngIco.hidden = true;
+      hlbkaIco.hidden = true;
+      hladinaIco.hidden = true;
+
+      // https://leafletjs.com/reference-1.4.0.html
+
+      // nacitavanie mapy
+      //zmysluplny zoom: 15 - 18 (potom viac nepusti)
+      var nadrz_jelenec = [48.39478, 18.20992];
+
+      var mymap = L.map('mojamapa')
+        .setView(nadrz_jelenec, 16);  //suradnice stredu, zoom
+
+      recenter.onclick = function () {
+        mymap.setView(nadrz_jelenec, 16);  //suradnice stredu, zoom
+      };
+
+      //zaklad - mapa z openstreetmap
+      L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" title="OpenStreetMap (OSM) is a collaborative project to create a free editable map of the world.">OpenStreetMap</a> &vert; <a href="http://www.webmap.sk" target="_blank" title="Priestor pre webové GIS projekty, ktoré stoja na open source softvéri.">WebMap</a>',
+        //https://gis.stackexchange.com/questions/198088/leaflet-subdomains-if-subdomain-is-down-attempt-another
+        subdomains: ['a', 'b', 'c']
+      }).addTo(mymap);
+
+      //mierka
+      L.control.scale().addTo(mymap);
+
+      L.control.locate().addTo(mymap);
+
+      var marker = {};
+      var rickoInfoSource = L.WMS.Source.extend({
+        'showFeatureInfo': function (latlng, info) {
+          if (!this._map) {
+            console.log('showFeatureInfo: no map => exit');
+            return; //nie je mapa, nie je kam zobrazovat
+          }
+
+          console.log('showFeatureInfo(' + latlng + ', ' + info + ')');
+
+          //this._map.openPopup(hlbka, latlng);
+          //this._map.openPopup(h, latlng);
+          //this._map.openPopup(info, latlng);
+
+          //hide previous location info
+          if (marker != undefined) {
+            this._map.removeLayer(marker);
+          }
+          latlngIco.hidden = true;
+          hlbkaIco.hidden = true;
+          //document.getElementById("miesto").innerHTML = "";
+          //document.getElementById("hlbka").innerHTML = "";
+
+          //testujeme vratene udaje, kvoli kliknutiam mimo nadrz
+          if (latlng != null && info != null) {
+
+            console.log('latlng defined, info defined');
+            //vytiahnutie udaja o hlbke z odpovede pomocou regex group
+            var regexH = /GRAY_INDEX = (\d*.\d*)/i;
+            var match = regexH.exec(info);
+
+            var h = Number(match[1]);
+            console.log("h: " + h + ", match[1]: " + match[1])
+            if (h != undefined && h >= 0) {
+              marker = L.marker(latlng).addTo(this._map);
+              latlngText.innerHTML = ' ' + parseFloat(latlng.lat).toFixed(6) + ";" + parseFloat(latlng.lng).toFixed(6);
+              hlbkaText.innerHTML = ' ' + h.toFixed(2) + "m";
+              latlngIco.hidden = false;
+              hlbkaIco.hidden = false;
+              hladinaIco.hidden = false;
+            }
+          }
+        }
+      });
+
+      var wms_proxy_url = "/svc/wms-proxy.php?";//'http://webmap.sk:8080/geoserver2112/nitra_students/wms?';
+      var wmsSrc = new rickoInfoSource(wms_proxy_url, {
+        'transparent': true,
+        tiled: true,
+        format: 'image/png',
+      });
+
+      //ziskanie aktualnej vrstvy hladiny
+      console.log("php call");
+      jQuery.get("/svc/mapovanie.php", function (response) {
+        console.log(response);
+        var parsed_res = response.split(";");
+        console.log(parsed_res.length);
+        if (parsed_res.length == 4) {
+          datum_mer = parsed_res[0];
+          cas_mer = parsed_res[1];
+          hladina = parsed_res[2];
+          layer_hlbka = parsed_res[3];
+          console.log("res ok");
+          console.log(datum_mer);
+          stavDenText.innerHTML = ' ' + datum_mer;
+          console.log(cas_mer);
+          stavCasText.innerHTML = ' ' + cas_mer;
+          console.log(hladina);
+          hladinaText.innerHTML = ' ' + hladina + 'm n.m.';
+          hladinaIco.hidden = false;
+          //hladina/hlbky
+          wmsSrc.getLayer(layer_hlbka).addTo(mymap);
+          //var nadrzWms = L.tileLayer.wms('/svc/wms-proxy.php?', {
+          //var nadrzWms = L.tileLayer.wms('http://webmap.sk:8080/geoserver2112/nitra_students/wms?', {
+          //layers: 'nitra_students:435_nanovo',
+          //layers: layer_hlbka,
+          //   tiled: true,
+          //   format: 'image/png',
+          //   transparent: true,
+          //   maxZoom: 18,
+          //   minZoom: 15,
+          //   continuousWorld: true
+          // }).addTo(mymap);
+          console.log(layer_hlbka);
+        } else {
+          cnsole.log("res nok");
+        }
+      });
+
+    </script>
+  </main>
+
+  <!-- Contact Section -->
+  <!-- Footer -->
+  <footer class="bg-black text-center text-white-50">
+    Copyright &copy; Bc. Richard Hanzlík 2019
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Plugin JavaScript -->
+  <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for this template -->
+  <script src="/js/grayscale.min.js"></script>
+
+</body>
+
+</html>

@@ -81,7 +81,7 @@
           <h2 class="text-white mb-4">O stránke</h2>
           <p class="text-white-50" style="text-align: justify;text-justify: newspaper">
             Toto je prezentačná stránka k mojej diplomovej práci "VYUŽITIE NÁSTROJOV WEB GIS PRE PUBLIKOVANIE ÚDAJOV O
-            VODNÝCH NÁDRŽIACH PRE PUBLIKOVANIE ÚDAJOV O VODNÝCH NÁDRŽIACH".
+            VODNÝCH NÁDRŽIACH".
             Zjednodušenú verziu iba s mapou možno nájsť <a href="/imapa/" target="_blank">tu <i
                 class="fas fa-external-link-alt"></i></a>.
           </p>
@@ -196,10 +196,10 @@
             console.log(response);
             var parsed_res = response.split(";");
             console.log(parsed_res.length);
-            if (parsed_res.length == 3) {
+            if (parsed_res.length == 4) {
               datum_mer = parsed_res[0];
               cas_mer = parsed_res[1];
-              layer_hlbka = parsed_res[2];
+              layer_hlbka = parsed_res[3];
               console.log("res ok");
               console.log(datum_mer);
               document.getElementById("stav_den").innerHTML = ' ' + datum_mer;
@@ -219,7 +219,7 @@
               }).addTo(mymap);
               console.log(layer_hlbka);
             } else {
-              cnsole.log("res nok");
+              console.log("res nok");
             }
           });
 
